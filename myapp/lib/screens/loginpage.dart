@@ -7,6 +7,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String name = "";
+  bool changeButton = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
                 height: 20,
               ),
               Text(
-                "Welcome",
+                "Welcome $name",
                 style: TextStyle(fontSize: 35, fontWeight: FontWeight.w500),
               ),
               SizedBox(
@@ -32,6 +34,11 @@ class _LoginPageState extends State<LoginPage> {
                   hintText: "Enter your email",
                   labelText: "Email",
                 ),
+                onChanged: (value) {
+                  setState(() {
+                    name = value;
+                  });
+                },
               ),
               SizedBox(
                 height: 10,
@@ -46,27 +53,44 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(
                 height: 20,
               ),
-              SizedBox(
-                width: 200,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 15,
-                      vertical: 5,
-                    ),
+              InkWell(
+                onTap: () async {
+                  setState(() {
+                    changeButton = true;
+                  });
+                  await Future.delayed(Duration(seconds: 1));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return HomePage();
+                  }));
+                },
+                child: AnimatedContainer(
+                  duration: Duration(seconds: 1),
+                  width: changeButton ? 50 : 200,
+                  height: 50,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 15,
+                    vertical: 10,
                   ),
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return HomePage();
-                    }));
-                  },
-                  child: Text(
-                    "LogIn",
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
+                  decoration: BoxDecoration(
+                    color: Colors.purple,
+                    borderRadius: changeButton
+                        ? BorderRadius.circular(50)
+                        : BorderRadius.circular(20),
                   ),
+                  child: changeButton
+                      ? Icon(
+                          Icons.check,
+                          color: Colors.white,
+                        )
+                      : Text(
+                          "Login",
+                          style: TextStyle(
+                            fontSize: 25,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
                 ),
               )
             ],
